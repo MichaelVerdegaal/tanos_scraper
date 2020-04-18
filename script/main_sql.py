@@ -14,17 +14,16 @@ cur.execute("CREATE TABLE IF NOT EXISTS vocabulary (id integer NOT NULL PRIMARY 
             "kanji varchar, hiragana varchar NOT NULL, english varchar NOT NULL, jlpt_level varchar not null);")
 # Create table to store example sentences for each entry
 cur.execute("CREATE TABLE IF NOT EXISTS example (id SERIAL NOT NULL PRIMARY KEY, "
-            "sentence varchar, vocab_id integer REFERENCES vocabulary (id));")
+            "sentence_jp varchar, sentence_en varchar, vocab_id integer REFERENCES vocabulary (id));")
 conn.commit()
 
 # TODO
 base_url = 'http://www.tanos.co.uk'
-# vocab_urls = ['http://www.tanos.co.uk/jlpt/jlpt5/vocab/',
-#               'http://www.tanos.co.uk/jlpt/jlpt4/vocab/',
-#               'http://www.tanos.co.uk/jlpt/jlpt3/vocab/',
-#               'http://www.tanos.co.uk/jlpt/jlpt2/vocab/',
-#               'http://www.tanos.co.uk/jlpt/jlpt1/vocab/']
-vocab_urls = ['http://www.tanos.co.uk/jlpt/jlpt5/vocab/']
+vocab_urls = ['http://www.tanos.co.uk/jlpt/jlpt5/vocab/',
+              'http://www.tanos.co.uk/jlpt/jlpt4/vocab/',
+              'http://www.tanos.co.uk/jlpt/jlpt3/vocab/',
+              'http://www.tanos.co.uk/jlpt/jlpt2/vocab/',
+              'http://www.tanos.co.uk/jlpt/jlpt1/vocab/']
 jlpt_level_counter = 5
 
 
@@ -37,9 +36,11 @@ def get_example_content(item):
     if item:
         try:
             result = re.sub('\n', '', item)
+            # Split examples into their language category
             result = result.split('\t')
-            result = f"JP: {result[0]}\n EN {result[1]}"
-            return result
+            result_jp = f"JP: {result[0]}"
+            result_en = f"EN: {result[1]}"
+            return result_jp, result_en
         except IndexError:
             pass
 
@@ -78,10 +79,15 @@ for page_url in vocab_urls:
             raw_examples = page_divs.find_next('ul')
             if raw_examples:
                 for li in raw_examples.find_all('li'):
-                    example = get_example_content(li.text)
-                    cur.execute(
-                        sql.SQL("insert into example (sentence, vocab_id) values (%s, %s) ON CONFLICT DO NOTHING "),
-                        [example, vocab_id])
+                    try:
+                        example_jp, example_en = get_example_content(li.text)
+                        cur.execute(
+                            sql.SQL("insert into example (sentence_jp, sentence_en, vocab_id) "
+                                    "values (%s, %s, %s) ON CONFLICT DO NOTHING "),
+                            [example_jp, example_en, vocab_id])
+                    # Some example sentences have a garbled structure, so we skip those
+                    except TypeError:
+                        pass
 
         conn.commit()
         vocab_id += 1
