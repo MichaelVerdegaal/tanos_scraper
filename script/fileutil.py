@@ -1,7 +1,7 @@
 from openpyxl import Workbook, load_workbook
 from os.path import exists
 
-filename = "vocab.xlsx"
+filename = "../vocab.xlsx"
 
 
 def check_workbook():

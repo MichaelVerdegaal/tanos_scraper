@@ -3,7 +3,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-from fileutil import return_workbook, filename
+from script.fileutil import return_workbook, filename
 
 
 base_url = 'http://www.tanos.co.uk'
