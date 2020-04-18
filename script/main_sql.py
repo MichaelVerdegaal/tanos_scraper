@@ -61,37 +61,32 @@ for page_url in vocab_urls:
         print(f"Scraping for level {jlpt_level} - {vocab_id}/{len(rows)}")
         cells = row.findAll('td')
         table_items = [cell.get_text() for cell in cells]
-        # Not all vocab entries have a kanji, so we grab this page from the second column (3rd would work too)
-        # examples_page = cells[1].find('a')
-        # examples_page = base_url + examples_page['href'] if examples_page else ""
-
-
         # Add row to vocabulary table
         cur.execute(sql.SQL("insert into vocabulary values (%s, %s, %s, %s, %s) ON CONFLICT DO NOTHING "),
                     [vocab_id, table_items[0], table_items[1], table_items[2], jlpt_level])
+
+        # Not all vocab entries have a kanji, so we grab the example from the second column (3rd would work too)
+        examples_page = cells[1].find('a')
+        examples_page = base_url + examples_page['href'] if examples_page else ""
+
+        # Traverse the examples page
+        print(f"Crawling example page for kanji {table_items[1]}")
+        if examples_page:
+            examples_page_html = requests.get(examples_page).content
+            examples_soup = BeautifulSoup(examples_page_html, 'html.parser')
+            page_divs = examples_soup.find(id='contentright')
+            raw_examples = page_divs.find_next('ul')
+            if raw_examples:
+                for li in raw_examples.find_all('li'):
+                    example = get_example_content(li.text)
+                    cur.execute(
+                        sql.SQL("insert into example (sentence, vocab_id) values (%s, %s) ON CONFLICT DO NOTHING "),
+                        [example, vocab_id])
+
         conn.commit()
         vocab_id += 1
 
 jlpt_level_counter -= 1
-
-
-# Traverse the examples page
-# print(f"Crawling example page for kanji {table_items[1]}")
-# example_sentence_list = []
-# if examples_page:
-#     examples_page_html = requests.get(examples_page).content
-#     examples_soup = BeautifulSoup(examples_page_html, 'html.parser')
-#     page_divs = examples_soup.find(id='contentright')
-#     raw_examples = page_divs.find_next('ul')
-#
-#     if raw_examples:
-#         for li in raw_examples.find_all('li'):
-#             example = get_example_content(li.text)
-#             example_sentence_list.append(example)
-#
-# # Add everything to a list to append as an excel row
-# to_insert.append(str(example_sentence_list))
-
 
 cur.close()
 conn.close()
