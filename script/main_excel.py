@@ -28,7 +28,7 @@ def get_example_content(item):
         try:
             result = re.sub('\n', '', item)
             result = result.split('\t')
-            result = f"JP: {result[0]}\n EN {result[1]}"
+            result = f"JP: {result[0]}\n EN: {result[1]}"
             return result
         except IndexError:
             pass
