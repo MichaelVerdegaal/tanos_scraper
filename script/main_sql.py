@@ -3,9 +3,22 @@ import re
 from psycopg2 import connect, sql
 import requests
 from bs4 import BeautifulSoup
+from datetime import datetime
 
 from script.config import *
 
+# Scraping base urls
+base_url = 'http://www.tanos.co.uk'
+vocab_urls = ['http://www.tanos.co.uk/jlpt/jlpt5/vocab/',
+              'http://www.tanos.co.uk/jlpt/jlpt4/vocab/',
+              'http://www.tanos.co.uk/jlpt/jlpt3/vocab/',
+              'http://www.tanos.co.uk/jlpt/jlpt2/vocab/',
+              'http://www.tanos.co.uk/jlpt/jlpt1/vocab/']
+# Counters
+jlpt_level_counter = 5
+vocab_id = 1
+start = datetime.now()
+# Database connection
 conn = connect(host=host, port=port, database=database, user=user, password=password)
 cur = conn.cursor()
 
@@ -16,14 +29,6 @@ cur.execute("CREATE TABLE IF NOT EXISTS vocabulary (id integer NOT NULL PRIMARY 
 cur.execute("CREATE TABLE IF NOT EXISTS example (id SERIAL NOT NULL PRIMARY KEY, "
             "sentence_jp varchar, sentence_en varchar, vocab_id integer REFERENCES vocabulary (id));")
 conn.commit()
-
-base_url = 'http://www.tanos.co.uk'
-vocab_urls = ['http://www.tanos.co.uk/jlpt/jlpt5/vocab/',
-              'http://www.tanos.co.uk/jlpt/jlpt4/vocab/',
-              'http://www.tanos.co.uk/jlpt/jlpt3/vocab/',
-              'http://www.tanos.co.uk/jlpt/jlpt2/vocab/',
-              'http://www.tanos.co.uk/jlpt/jlpt1/vocab/']
-jlpt_level_counter = 5
 
 
 def get_example_content(item):
@@ -44,7 +49,6 @@ def get_example_content(item):
             pass
 
 
-vocab_id = 1
 for page_url in vocab_urls:
     print(f"Crawling link {page_url}")
     jlpt_level = f"N{jlpt_level_counter}"
@@ -58,7 +62,8 @@ for page_url in vocab_urls:
 
     # Looping over rows to extract data
     for row in rows:
-        print(f"Scraping level {jlpt_level} - {vocab_id}/{len(rows)}")
+        time_taken = datetime.now() - start
+        print(f"Scraping level {jlpt_level} | {vocab_id}/{len(rows)} scraped | Script has been running for {time_taken}")
         cells = row.findAll('td')
         table_items = [cell.get_text() for cell in cells]
         # Add row to vocabulary table
