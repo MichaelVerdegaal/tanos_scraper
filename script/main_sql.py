@@ -63,7 +63,7 @@ for page_url in vocab_urls:
     # Looping over rows to extract data
     for row in rows:
         time_taken = datetime.now() - start
-        print(f"Scraping level {jlpt_level} | {vocab_id}/{len(rows)} scraped | Script has been running for {time_taken}")
+        print(f"Scraping level {jlpt_level} | {vocab_id} entries scraped | Script has been running for {time_taken}")
         cells = row.findAll('td')
         table_items = [cell.get_text() for cell in cells]
         # Add row to vocabulary table
