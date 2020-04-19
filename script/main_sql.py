@@ -92,7 +92,7 @@ for page_url in vocab_urls:
         conn.commit()
         vocab_id += 1
 
-jlpt_level_counter -= 1
+    jlpt_level_counter -= 1
 
 cur.close()
 conn.close()
