@@ -17,7 +17,6 @@ cur.execute("CREATE TABLE IF NOT EXISTS example (id SERIAL NOT NULL PRIMARY KEY,
             "sentence_jp varchar, sentence_en varchar, vocab_id integer REFERENCES vocabulary (id));")
 conn.commit()
 
-# TODO
 base_url = 'http://www.tanos.co.uk'
 vocab_urls = ['http://www.tanos.co.uk/jlpt/jlpt5/vocab/',
               'http://www.tanos.co.uk/jlpt/jlpt4/vocab/',
@@ -45,6 +44,7 @@ def get_example_content(item):
             pass
 
 
+vocab_id = 1
 for page_url in vocab_urls:
     print(f"Crawling link {page_url}")
     jlpt_level = f"N{jlpt_level_counter}"
@@ -57,9 +57,8 @@ for page_url in vocab_urls:
     rows = rows[1:]
 
     # Looping over rows to extract data
-    vocab_id = 1
     for row in rows:
-        print(f"Scraping for level {jlpt_level} - {vocab_id}/{len(rows)}")
+        print(f"Scraping level {jlpt_level} - {vocab_id}/{len(rows)}")
         cells = row.findAll('td')
         table_items = [cell.get_text() for cell in cells]
         # Add row to vocabulary table
@@ -71,7 +70,6 @@ for page_url in vocab_urls:
         examples_page = base_url + examples_page['href'] if examples_page else ""
 
         # Traverse the examples page
-        print(f"Crawling example page for kanji {table_items[1]}")
         if examples_page:
             examples_page_html = requests.get(examples_page).content
             examples_soup = BeautifulSoup(examples_page_html, 'html.parser')
@@ -88,10 +86,8 @@ for page_url in vocab_urls:
                     # Some example sentences have a garbled structure, so we skip those
                     except TypeError:
                         pass
-
-        conn.commit()
         vocab_id += 1
-
+        conn.commit()
     jlpt_level_counter -= 1
 
 cur.close()
