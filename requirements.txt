@@ -4,7 +4,6 @@ chardet==3.0.4
 et-xmlfile==1.0.1
 idna==2.9
 jdcal==1.4.1
-openpyxl==3.0.3
 psycopg2-binary==2.8.5
 requests==2.23.0
 soupsieve==2.0
