@@ -11,9 +11,8 @@ data for myself, and i couldn't really find something nice elsewhere.
 it to `config.py` 
 
 ## How does it work?
-This is a fairly simple python script making use of BeautifulSoup4.It extracts each entry from the table,
-and then traverses the examples if there are any (there most definitely are examples, until you get to
-around N1 level vocabulary where they get increasingly lacking). Examples are added with a foreign key
+This is a fairly simple python script making use of BeautifulSoup4. It extracts each entry from the table,
+and then traverses the examples if there are any (there most definitely are examples for most entries, but they get increasingly lacking per JLPT level). Examples are added with a foreign key
 to the vocabulary table.
 
 To execute the script run `main_sql.py`.
@@ -23,4 +22,4 @@ A fairly substantial time, except it to take around 4-5 hours in most cases.
 
 ## Will this crash the source website?
 Very likely it won't. The script takes roughly 1 second per request, which it should handle just fine. 
-If you're unsure you can implement a sleep mechanic, are request a database dump by messaging me :^).
+If you're unsure you can implement a sleep mechanic, or request a database dump by messaging me.
