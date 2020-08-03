@@ -5,6 +5,8 @@ Furthermore it collects the example sentences together for each vocab word (wher
 The reason this was written is because i wanted to experiment with a large set of jlpt training 
 data for myself, and i couldn't really find something nice elsewhere.
 
+For an example on how the data can be used, check my website - [VocaBee](www.vocabee.xyz)
+
 ## Requirements
 - The packages installed listed in requirements.txt
 - An empty postgres database. Fill in the credentials in `config_example.py`, when you're done, rename 
@@ -12,8 +14,7 @@ it to `config.py`
 
 ## How does it work?
 This is a fairly simple python script making use of BeautifulSoup4. It extracts each entry from the table,
-and then traverses the examples if there are any (there most definitely are examples for most entries, but they get increasingly lacking per JLPT level). Examples are added with a foreign key
-to the vocabulary table.
+and then traverses the examples if there are any (there most definitely are examples for most entries, but they get increasingly lacking per JLPT level). Examples are added with a foreign key to the vocabulary table.
 
 To execute the script run `main_sql.py`.
   
@@ -21,5 +22,5 @@ To execute the script run `main_sql.py`.
 A fairly substantial time, except it to take around 4-5 hours in most cases.
 
 ## Will this crash the source website?
-Very likely it won't. The script takes roughly 1 second per request, which it should handle just fine. 
+Very likely it won't. The script takes multiple seconds per request, which it should handle just fine. 
 If you're unsure you can implement a sleep mechanic, or request a database dump by messaging me.
