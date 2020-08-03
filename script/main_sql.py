@@ -42,8 +42,8 @@ def get_example_content(item):
             result = re.sub('\n', '', item)
             # Split examples into their language category
             result = result.split('\t')
-            result_jp = f"JP: {result[0]}"
-            result_en = f"EN: {result[1]}"
+            result_jp = f"{result[0]}"
+            result_en = f"{result[1]}"
             return result_jp, result_en
         except IndexError:
             pass
