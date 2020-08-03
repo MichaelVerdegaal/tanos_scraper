@@ -5,7 +5,7 @@ Furthermore it collects the example sentences together for each vocab word (wher
 The reason this was written is because i wanted to experiment with a large set of jlpt training 
 data for myself, and i couldn't really find something nice elsewhere.
 
-For an example on how the data can be used, check my website - [VocaBee](www.vocabee.xyz)
+For an example on how the data can be used, check my website - [VocaBee](https://www.vocabee.xyz)
 
 ## Requirements
 - The packages installed listed in requirements.txt
