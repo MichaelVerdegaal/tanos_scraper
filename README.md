@@ -5,7 +5,10 @@ Furthermore it collects the example sentences together for each vocab word (wher
 The reason this was written is because i wanted to experiment with a large set of jlpt training 
 data for myself, and i couldn't really find something nice elsewhere.
 
-For an example on how the data can be used, check my website - [VocaBee](https://www.vocabee.xyz)
+# UPDATE!
+
+The vocabulary pages of the website seem to be non-responsive. In other words, this code won't work. I still had the dataset hanging around locally, and so took the liberty of parsing it to a .json file you can download :D ([link](https://drive.google.com/file/d/1UZ4CfwflS8gNOQNcSH7f82k6CSoSY0fV/view?usp=sharing)) 
+
 
 ## Requirements
 - The packages installed listed in requirements.txt
